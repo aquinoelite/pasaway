@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t "aquinoelite/flask_app:latest" .
+            docker build -t "aquinoelite/app:latest" .
           
   deploy-terraform:
     executor: terraform-executor
