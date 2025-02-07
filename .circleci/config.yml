@@ -4,22 +4,22 @@ executors:
   python-executor:
     docker:
       - image: circleci/python:3.10
-    working_directory: ~/project
+    working_directory: ~/pasaway
 
   docker-executor:
     docker:
       - image: cimg/base:stable
-    working_directory: ~/project
+    working_directory: ~/pasaway
 
   terraform-executor:
     docker:
       - image: hashicorp/terraform:latest
-    working_directory: ~/project
+    working_directory: ~/pasaway
 
   ansible-executor:
     docker:
       - image: williamyeh/ansible:latest
-    working_directory: ~/project
+    working_directory: ~/pasaway
 
 jobs:
   build-and-test:
@@ -32,6 +32,21 @@ jobs:
             python -m venv venv
             source venv/bin/activate
             pip install -r requirements.txt
+
+  build-docker-image:
+    executor: docker-executor
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker Image
+          command: docker build -t $DOCKERHUB_USERNAME/app:latest .
+      - run:
+          name: Log in to Docker Hub
+          command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - run:
+          name: Push Docker Image
+          command: docker push aquinoelite/app:latest
           
   deploy-terraform:
     executor: terraform-executor
