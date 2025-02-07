@@ -40,7 +40,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t $DOCKERHUB_USERNAME/app:latest .
+          command: docker build -t aquinoelite/app:latest .
       - run:
           name: Log in to Docker Hub
           command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
