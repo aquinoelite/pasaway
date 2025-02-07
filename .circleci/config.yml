@@ -39,14 +39,19 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Validate Environment Variables
+          command: |
+            if [[ -z "${DOCKERHUB_USERNAME}" ]]; then
+              echo "ERROR: DOCKERHUB_USERNAME is not set!"
+              exit 1
+            fi
+      - run:
+          name: Debug DockerHub Username
+          command: echo "DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME}"
+      - run:
           name: Build Docker Image
-          command: docker build -t aquinoelite/app:latest .
-      - run:
-          name: Log in to Docker Hub
-          command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-      - run:
-          name: Push Docker Image
-          command: docker push $DOCKERHUB_USERNAME/app:latest
+          command: |
+            docker build -t "${DOCKERHUB_USERNAME}/app:latest" .
           
   deploy-terraform:
     executor: terraform-executor
