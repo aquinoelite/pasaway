@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t "${DOCKERHUB_USERNAME}/app:latest" .
+            docker build -t "${DOCKERHUB_USERNAME}/flask_app:latest" .
           
   deploy-terraform:
     executor: terraform-executor
