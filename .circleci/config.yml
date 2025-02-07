@@ -31,7 +31,7 @@ jobs:
           command: |
             python -m venv venv
             source venv/bin/activate
-            pip install -r requirements.txt --user
+            pip install -r requirements.txt
 
   build-docker-image:
     executor: docker-executor
