@@ -39,19 +39,9 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Validate Environment Variables
-          command: |
-            if [[ -z "${DOCKERHUB_USERNAME}" ]]; then
-              echo "ERROR: DOCKERHUB_USERNAME is not set!"
-              exit 1
-            fi
-      - run:
-          name: Debug DockerHub Username
-          command: echo "DOCKERHUB_USERNAME=aquinoelite"
-      - run:
           name: Build Docker Image
           command: |
-            docker build -t "${DOCKERHUB_USERNAME}/flask_app:latest" .
+            docker build -t "aquinoelite/flask_app:latest" .
           
   deploy-terraform:
     executor: terraform-executor
