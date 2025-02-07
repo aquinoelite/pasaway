@@ -4,22 +4,22 @@ executors:
   python-executor:
     docker:
       - image: circleci/python:3.10
-    working_directory: ~/pasaway
+    working_directory: ~/project
 
   docker-executor:
     docker:
-      - image: cimg/base:stable
-    working_directory: ~/pasaway
+      - image: circleci/docker:latest
+    working_directory: ~/project
 
   terraform-executor:
     docker:
       - image: hashicorp/terraform:latest
-    working_directory: ~/pasaway
+    working_directory: ~/project
 
   ansible-executor:
     docker:
       - image: williamyeh/ansible:latest
-    working_directory: ~/pasaway
+    working_directory: ~/project
 
 jobs:
   build-and-test:
@@ -32,6 +32,11 @@ jobs:
             python -m venv venv
             source venv/bin/activate
             pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: |
+            source venv/bin/activate
+            pytest tests/
 
   build-docker-image:
     executor: docker-executor
@@ -40,14 +45,14 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t aquinoelite/app:latest .
+          command: docker build -t aquinoelite/flask-app:latest .
       - run:
           name: Log in to Docker Hub
           command: echo "$DOCKERHUB_PASSWORD" | docker login -u aquinoelite --password-stdin
       - run:
           name: Push Docker Image
-          command: docker push aquinoelite/app:latest
-          
+          command: docker push aquinoelite/flask-app:latest
+
   deploy-terraform:
     executor: terraform-executor
     steps:
