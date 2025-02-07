@@ -40,8 +40,13 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: |
-            docker build -t "aquinoelite/app:latest" .
+          command: docker build -t aquinoelite/flask-app:latest .
+      - run:
+          name: Log in to Docker Hub
+          command: echo "$DOCKERHUB_PASSWORD" | docker login -u "aquinoelite" --password-stdin
+      - run:
+          name: Push Docker Image
+          command: docker push aquinoelite/flask-app:latest
           
   deploy-terraform:
     executor: terraform-executor
